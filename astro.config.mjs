@@ -5,15 +5,13 @@ import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 import rehypeMermaid from 'rehype-mermaid';
+import staticAdapter from '@astrojs/static'; // 🔹 Adaptador estático para GitHub Pages
 
-// Detectar entorno
 const isProduction = process.env.NODE_ENV === 'production';
 
-// https://astro.build/config
 export default defineConfig({
-  // URL base del proyecto en GitHub Pages
-  site: 'https://yancax12.github.io',
-  base: '/Jhanc.github.io/', // 🔹 Nombre EXACTO del repo en GitHub
+  site: 'https://yancax12.github.io',      // URL base
+  base: '/Jhanc.github.io/',               // Nombre del repositorio en GitHub
 
   integrations: [
     react(),
@@ -46,7 +44,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  // GitHub Pages usa estáticos, no Vercel
+  adapter: staticAdapter(), // 🔹 Aquí usamos el adaptador para sitios estáticos
   output: 'static',
   build: {
     format: 'directory',
