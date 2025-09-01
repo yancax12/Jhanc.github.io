@@ -1,27 +1,20 @@
 import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
-
 import mdx from '@astrojs/mdx';
-
 import tailwindcss from '@tailwindcss/vite';
 import { remarkReadingTime } from './src/lib/remark-reading-time.mjs';
 import rehypeMermaid from 'rehype-mermaid';
 
-import vercel from '@astrojs/vercel';
-
-// Use different strategies based on environment
+// Detectar entorno
 const isProduction = process.env.NODE_ENV === 'production';
-const isVercel = process.env.VERCEL === '1';
-
-// Use 'pre-built' on Vercel/production to avoid Playwright, 'inline-svg' locally
-const mermaidStrategy = isProduction || isVercel ? 'pre-built' : 'inline-svg';
-
-console.log(`Using Mermaid strategy: ${mermaidStrategy}`);
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://Jhanc.github.io', // IMPORTANT: Replace with your actual domain in production
+  // URL base del proyecto en GitHub Pages
+  site: 'https://yancax12.github.io',
+  base: '/Jhanc.github.io/', // 🔹 Nombre EXACTO del repo en GitHub
+
   integrations: [
     react(),
     mdx({
@@ -30,10 +23,7 @@ export default defineConfig({
         [
           rehypeMermaid,
           {
-            strategy:
-              process.env.NODE_ENV === 'production'
-                ? 'pre-mermaid'
-                : 'inline-svg',
+            strategy: isProduction ? 'pre-built' : 'inline-svg',
           },
         ],
       ],
@@ -56,5 +46,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  adapter: vercel(),
+  // GitHub Pages usa estáticos, no Vercel
+  output: 'static',
+  build: {
+    format: 'directory',
+  },
 });
