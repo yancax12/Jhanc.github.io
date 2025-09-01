@@ -14,17 +14,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository
+      # 1. Clonar repositorio
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install and build Astro site
-        uses: withastro/action@v3
+      # 2. Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: . # Carpeta raíz del proyecto
           node-version: 20
-          package-manager: npm
 
-      # Subir la carpeta generada por Astro (dist) como artefacto
+      # 3. Instalar dependencias (ignorando conflictos)
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # 4. Construir el proyecto Astro
+      - name: Build Astro project
+        run: npm run build
+
+      # 5. Subir la carpeta de build como artefacto
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
